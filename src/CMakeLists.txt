@@ -1,5 +1,5 @@
 cmake_minimum_required (VERSION 3.16)
-project (tinyhash VERSION 0.1.1 DESCRIPTION "Tiny collection of hashing algorithms.")
+project (tinyhash VERSION 0.1.2 DESCRIPTION "Tiny collection of hashing algorithms.")
 
 set (TINYHASH_MAJOR_VERSION 0)
 
@@ -59,7 +59,8 @@ endif ()
 
 #file (GLOB_RECURSE SOURCE_FILES "." "*.c")
 set (SOURCE_FILES "base85.c"
-                  "simhash.c")
+                  "simhash.c"
+                  "uuid4.c")
 
 set (BINARY_NAME "thash")
 add_library (${BINARY_NAME} ${TINYHASH_LIB_TYPE} ${SOURCE_FILES})
