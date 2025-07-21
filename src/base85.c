@@ -169,7 +169,7 @@ get_decode_length(size_t size)
 }
 
 size_t
-base85_encode(char* restrict destination, void const* restrict source, size_t size)
+base85_encode(char* restrict destination, const void* restrict source, size_t size)
 {
     size_t len = get_encode_length(size);
 
@@ -204,7 +204,7 @@ base85_encode(char* restrict destination, void const* restrict source, size_t si
 }
 
 size_t
-base85_decode(void* restrict destination, char const* restrict source)
+base85_decode(void* restrict destination, const char* restrict source)
 {
     int size = strlen(source);
 
