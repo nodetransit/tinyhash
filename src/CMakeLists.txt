@@ -1,5 +1,8 @@
 cmake_minimum_required (VERSION 3.16)
-project (tinyhash VERSION 0.1.2 DESCRIPTION "Tiny collection of hashing algorithms.")
+project (tinyhash VERSION 0.1.3 DESCRIPTION "Tiny collection of hashing algorithms.")
+
+set(CMAKE_STATIC_LIBRARY_PREFIX "")
+set(CMAKE_SHARED_LIBRARY_PREFIX "")
 
 set (TINYHASH_MAJOR_VERSION 0)
 
@@ -58,12 +61,14 @@ endif ()
 #---------------------------------------------------------------------
 
 #file (GLOB_RECURSE SOURCE_FILES "." "*.c")
-set (SOURCE_FILES "base85.c"
+set (SOURCE_FILES "aes.c"
+                  "base85.c"
                   "simhash.c"
                   "uuid4.c")
 
-set (BINARY_NAME "thash")
+set (BINARY_NAME "thashlib")
 add_library (${BINARY_NAME} ${TINYHASH_LIB_TYPE} ${SOURCE_FILES})
+# include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 #---------------------------------------------------------------------
 
@@ -139,8 +144,7 @@ endif ()
 #---------------------------------------------------------------------
 
 if (${TINYHASH_LIB_TYPE} STREQUAL "STATIC")
-    list (APPEND COMMON_DEBUG_COMPILE_OPTTIONS "-fPIC"
-          )
+    set_property(TARGET ${BINARY_NAME} PROPERTY POSITION_INDEPENDENT_CODE ON)
 elseif (${TINYHASH_LIB_TYPE} STREQUAL "SHARED")
     if (LOSER)
         set (CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
@@ -154,14 +158,14 @@ elseif (${TINYHASH_LIB_TYPE} STREQUAL "SHARED")
         if (DLLTOOL)
             set_target_properties (${BINARY_NAME} PROPERTIES OUTPUT_NAME "${BINARY_NAME}"
                                                   ARCHIVE_OUTPUT_NAME "${BINARY_NAME}"
-                                                  LINK_FLAGS "${CMAKE_SHARED_LINKER_FLAGS_INIT} -Wl,--output-def=${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/lib${BINARY_NAME}.def")
+                                                  LINK_FLAGS "${CMAKE_SHARED_LINKER_FLAGS_INIT} -Wl,--output-def=${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/${BINARY_NAME}.def")
 
             add_custom_command(TARGET ${BINARY_NAME} POST_BUILD
                                WORKING_DIRECTORY "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}"
                                COMMAND echo "Generating import library"
-                               COMMAND "${DLLTOOL}" --dllname "lib${BINARY_NAME}.dll"
-                                                    --input-def "lib${BINARY_NAME}.def"
-                                                    --output-lib "lib${BINARY_NAME}.lib"
+                               COMMAND "${DLLTOOL}" --dllname "${BINARY_NAME}.dll"
+                                                    --input-def "${BINARY_NAME}.def"
+                                                    --output-lib "${BINARY_NAME}.lib"
                                                     #todo add --as-flags=--64
                                                     )
 

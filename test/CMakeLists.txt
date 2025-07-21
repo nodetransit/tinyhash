@@ -1,7 +1,7 @@
 cmake_minimum_required (VERSION 3.16)
 project(tinyhash_test)
 
-add_subdirectory("./../src" thash)
+add_subdirectory("../src" thashlib)
 
 #---------------------------------------------------------------------
 
@@ -84,12 +84,12 @@ macro(add_example name)
         endif ()
     endif ()
 
-    target_link_libraries(${name} "thash")
+    target_link_libraries(${name} thashlib)
 endmacro()
 
 #---------------------------------------------------------------------
 
-#add_example("aes")
+add_example("aes")
 add_example("base85")
 #add_example("blowfish")
 add_example("simhash")
